@@ -18,15 +18,15 @@ function configurationError() {
 async function graphGet(path, params = {}) {
   const missing = configurationError();
   if (missing) throw new Error(missing);
-  const url = new URL(\`https://graph.facebook.com/\${GRAPH_VERSION}/\${path}\`);
+  const url = new URL("https://graph.facebook.com/" + GRAPH_VERSION + "/" + path);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   const response = await fetch(url, {
-    headers: { Authorization: \`Bearer \${ACCESS_TOKEN}\` },
+    headers: { Authorization: "Bearer " + ACCESS_TOKEN },
     signal: AbortSignal.timeout(15000)
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const message = payload?.error?.message || \`Meta Graph API returned HTTP \${response.status}\`;
+    const message = payload?.error?.message || "Meta Graph API returned HTTP " + response.status;
     throw new Error(message);
   }
   return payload;
@@ -51,7 +51,7 @@ server.tool(
   "List recent media metadata for the configured Instagram Professional account. Read-only; does not interact with other accounts.",
   { limit: z.number().int().min(1).max(25).default(10) },
   async ({ limit }) => {
-    const result = await graphGet(\`\${IG_USER_ID}/media\`, {
+    const result = await graphGet(IG_USER_ID + "/media", {
       fields: "id,caption,media_type,permalink,timestamp,thumbnail_url,media_url",
       limit: String(limit)
     });
