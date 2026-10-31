@@ -1,1 +1,1 @@
-# unitx2-instagram-mcp.
+# unitx2-instagram-mcp
